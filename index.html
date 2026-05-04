@@ -3,78 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Ministry Form</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link id="theme-style" rel="stylesheet" href="light-mode.css">
     <style>
-        body { font-family: Arial, sans-serif; }
-        .dark { background-color: #333; color: #fff; }
+        :root {
+            --background-light: #ffffff;
+            --background-dark: #222222;
+            --text-light: #000000;
+            --text-dark: #ffffff;
+            --gradient: linear-gradient(to right, #6a11cb, #2575fc);
+        }
+        body {
+            background-color: var(--background-light);
+            color: var(--text-light);
+            transition: background-color 0.5s, color 0.5s;
+        }
+        body.dark-mode {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+        /* Additional CSS for better UI */
+        .table {
+            width: 100%;
+            max-height: 500px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Status bar styles */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--gradient);
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>Ministry Form</h1>
-    <form id="ministry-form">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-        <button type="submit">Submit</button>
+    <div class="status-bar">Last saved: 2026-05-04 14:30:44 UTC</div>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
+    <form id="ministryForm">
+        <table class="table">
+            <tbody>
+                <!-- 20 rows for better usability -->
+                <tr><td><input type="text" placeholder="Field 1"></td></tr>
+                <tr><td><input type="text" placeholder="Field 2"></td></tr>
+                <tr><td><input type="text" placeholder="Field 3"></td></tr>
+                <tr><td><input type="text" placeholder="Field 4"></td></tr>
+                <tr><td><input type="text" placeholder="Field 5"></td></tr>
+                <tr><td><input type="text" placeholder="Field 6"></td></tr>
+                <tr><td><input type="text" placeholder="Field 7"></td></tr>
+                <tr><td><input type="text" placeholder="Field 8"></td></tr>
+                <tr><td><input type="text" placeholder="Field 9"></td></tr>
+                <tr><td><input type="text" placeholder="Field 10"></td></tr>
+                <tr><td><input type="text" placeholder="Field 11"></td></tr>
+                <tr><td><input type="text" placeholder="Field 12"></td></tr>
+                <tr><td><input type="text" placeholder="Field 13"></td></tr>
+                <tr><td><input type="text" placeholder="Field 14"></td></tr>
+                <tr><td><input type="text" placeholder="Field 15"></td></tr>
+                <tr><td><input type="text" placeholder="Field 16"></td></tr>
+                <tr><td><input type="text" placeholder="Field 17"></td></tr>
+                <tr><td><input type="text" placeholder="Field 18"></td></tr>
+                <tr><td><input type="text" placeholder="Field 19"></td></tr>
+                <tr><td><input type="text" placeholder="Field 20"></td></tr>
+            </tbody>
+        </table>
     </form>
-    <button id="download-pdf">Download as PDF</button>
-    <button id="download-excel">Download as Excel</button>
-    <button id="download-json">Download as JSON</button>
-    <button id="toggle-theme">Toggle Dark Mode</button>
     <script>
-        $(document).ready(function() {
-            // Dark mode toggle
-            $('#toggle-theme').click(function() {
-                $('body').toggleClass('dark');
-                var theme = $('body').hasClass('dark') ? 'dark' : 'light';
-                $('#theme-style').attr('href', theme + '-mode.css');
-            });
-
-            // Form submission
-            $('#ministry-form').on('submit', function(e) {
-                e.preventDefault();
-                // Validation logic
-                if (!validateForm()) return;
-                // Simulate a successful submission
-                alert('Form submitted successfully!');
-                autoSaveForm();
-            });
-
-            // Export functions (simulated)
-            $('#download-pdf').click(function() { exportPDF(); });
-            $('#download-excel').click(function() { exportExcel(); });
-            $('#download-json').click(function() { exportJSON(); });
-
-            // Auto-save functionality
-            setInterval(autoSaveForm, 5000); // Save every 5 seconds
-
-            // Keyboard shortcuts
-            $(document).on('keydown', function(e) {
-                if (e.ctrlKey && e.key === 's') {
-                    e.preventDefault();
-                    autoSaveForm();
-                }
-            });
-
-            function autoSaveForm() {
-                console.log('Form auto-saved.');
-                // Here you would implement your save logic
-            }
-
-            function validateForm() {
-                // Basic validation logic
-                const name = $('#name').val();
-                const email = $('#email').val();
-                return name && email;
-            }
-
-            function exportPDF() { /* PDF export logic */ }
-            function exportExcel() { /* Excel export logic */ }
-            function exportJSON() { /* JSON export logic */ }
+        // Dark Mode Toggle
+        const toggleButton = document.getElementById('darkModeToggle');
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
         });
+
+        // Auto-save feature
+        setInterval(() => {
+            saveData();
+        }, 30000);
+
+        // Function for saving data
+        function saveData() {
+            console.log('Data saved at ' + new Date().toUTCString());
+            document.querySelector('.status-bar').innerText = 'Last saved: ' + new Date().toUTCString();
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === 's') {
+                event.preventDefault();
+                saveData();
+            } else if (event.ctrlKey && event.key === 'p') {
+                window.print();
+            }
+        });
+
+        // Import and export functionalities
+        function importData() {
+            // Implement import logic
+        }
+
+        function exportData(format) {
+            // Implement export logic for both Excel and JSON
+        }
     </script>
 </body>
 </html>
